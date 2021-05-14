@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <form>
-      <h1 style="text-align:center;padding: 15px;"><b>LOGIN</b></h1>
+      <h1 style="text-align:center;padding: 15px;"><b></b></h1>
       <div class="mb-3">
         <input type="text" name="username" class="form-control" v-model="input.username" placeholder="Username" />
       </div>
@@ -11,6 +11,7 @@
       <div class="mb-3">
         <button type="button" class="btn btn-success" v-on:click="login()">Login</button>
       </div>
+      <router-link to="/register">Not a member? Register?</router-link>
     </form>
   </div>
 </template>
@@ -29,7 +30,13 @@
     methods: {
       login() {
         if(this.input.username != "" && this.input.password != "") {
-          console.log("login");
+          var user = {
+            email:    this.input.email,
+            username: this.input.username,
+            logged:   true
+          }
+          localStorage.setItem('user', user);
+          router.push('home');
         } else {
           console.log("A username and password must be present");
         }

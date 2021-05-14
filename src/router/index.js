@@ -7,27 +7,26 @@ import Register from '@/views/Register.vue';
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Login",
+    alias: "/login",
+    component: Login,
   },
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
+    path: "/home",
+    name: "Home",
+    component: Home,
     beforeEnter: checkAuth()
   },
   {
     path: "/register",
     name: "Register",
     component: Register,
-    beforeEnter: checkAuth()
   },
   {
-    // path: "*",
     path: "/:catchAll(.*)",
     name: "NotFound",
     component:NotFound,
-}
+  }
 ];
 
 const router = createRouter({
@@ -36,8 +35,11 @@ const router = createRouter({
 });
 
 function checkAuth(){
-  console.log(1);
-  //check user session 
+  var user = localStorage.getItem('user')
+  console.log(user);
+  //check user session //  
+  //post logout for back prohibition 
+  //after login
 }
 
 export default router;
