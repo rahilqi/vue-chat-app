@@ -1,26 +1,32 @@
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHashHistory, createRouter } from "vue-router";
 import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import NotFound from '@/views/NotFound.vue';
 import Register from '@/views/Register.vue';
+import ForgotPassword from '@/views/ForgotPassword.vue';
 
 const routes = [
   {
     path: "/",
-    name: "Login",
+    name: "home",
+    alias: "/home",
+    component: Home,
+  },
+  {
+    path: "/login",
+    name: "login",
     alias: "/login",
     component: Login,
   },
   {
-    path: "/home",
-    name: "Home",
-    component: Home,
-    beforeEnter: checkAuth()
+    path: "/register",
+    name: "register",
+    component: Register,
   },
   {
-    path: "/register",
-    name: "Register",
-    component: Register,
+    path: "/fpassword",
+    name: "Forgot Password",
+    component: ForgotPassword,
   },
   {
     path: "/:catchAll(.*)",
@@ -30,16 +36,28 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+  history: createWebHashHistory(),
+  routes
 });
 
+router.beforeEach((to, from, next) => {
+  if(checkAuth() && to.name == "login"){
+    next({name: "home"});
+  }else{
+    next();
+  }
+})
+// checkAuth();
+
 function checkAuth(){
-  var user = localStorage.getItem('user')
-  console.log(user);
-  //check user session //  
-  //post logout for back prohibition 
-  //after login
+  var user = getLoggedUser();
+  if(user != undefined)
+    return user.logged;
 }
 
+function getLoggedUser(){
+  var user = localStorage.getItem('user');
+  user     = JSON.parse(decodeURI(user));
+  return user;
+}
 export default router;

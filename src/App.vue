@@ -2,17 +2,14 @@
   <div id="nav">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">Vue-Chat</a>
+        <a class="navbar-brand" href="javascript:void(0)" v-on:click="home()">Vue-Chat</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/register">Sign Up</a>
+              <a class="nav-link" href="javascript:void(0)" id="btn-auth" ref="linkToggle" v-on:click="auth()"></a>
             </li>
           </ul>          
         </div>
@@ -22,3 +19,59 @@
   <router-view/>
 </template>
 
+<style type="text/css">
+  form{
+    border: 2px solid white;
+    padding: 30px;
+    margin-left: 100px;
+    margin-right: 100px;
+    width:50%;
+    margin-left: 25%;
+    margin-top: 10%;
+    box-shadow: 5px 10px 8px 10px #888888;
+  }
+  .outer{
+    border: 1px solid white;
+    margin: 30px 30px;
+    height: 600px;
+    border-radius: 5px;
+    box-shadow: 5px 10px 8px 10px #888888;
+    padding: 5px 5px;
+  }
+  .highlight{
+    border: 2px solid red;
+    border-radius: 5px;
+  }
+</style>
+
+<script>
+
+  export default {
+    mounted() {
+      var user = localStorage.getItem('user');
+      user     = JSON.parse(decodeURI(user));
+      if(user.logged){
+        this.$refs.linkToggle.innerText = 'Logout';
+      }
+    },
+    methods: {
+      auth(){
+        var user                        = localStorage.getItem('user');
+        user                            = JSON.parse(decodeURI(user));
+        user.logged                     = false;
+        this.$refs.linkToggle.innerText = '';
+        localStorage.setItem('user', encodeURI(JSON.stringify(user)));
+        this.$router.push({ path: 'login' });
+      },
+      home(){
+        var user = localStorage.getItem('user');
+        user     = JSON.parse(decodeURI(user));
+        if(user.logged){
+          this.$router.push({ path: 'home' });
+        }else{
+          this.$router.push({ path: 'login' });
+        }
+      }
+    }
+  }
+</script>

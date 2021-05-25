@@ -13,36 +13,23 @@
 </template>
 
 <script>
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        input: {
-          email: "",
-        }
+export default {
+  name: 'ForgotPassword',
+  data() {
+    return {
+      input: {
+        email: "",
       }
-    },
-    methods: {
-      login() {
-        if(this.input.email != ""){
-          console.log("login");
-        } else {
-          console.log("");
-        }
+    }
+  },
+  methods: {
+    login() {
+      if(this.input.email != ""){
+        console.log("Please provide some password.");
+      } else {
+        console.log("Password confirmation will be sent to you shortly.");
       }
     }
   }
-</script>
-
-<style>
-form{
-  border: 2px solid black;
-  padding: 30px;
-  margin-left: 100px;
-  margin-right: 100px;
-  width:50%;
-  margin-left: 25%;
-  margin-top: 10%;
-  box-shadow: 5px 10px 8px 10px #888888;
 }
-</style>
+</script>
