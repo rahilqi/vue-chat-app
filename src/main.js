@@ -5,8 +5,9 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import router from './router'
 import VueRouter from 'vue-router';
 import VueSweetalert2 from 'vue-sweetalert2';
-
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 // If you don't need the styles, do not connect
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-createApp(App).use(router).use(VueRouter).use(VueSweetalert2).mount('#app');
+createApp(App).use(router).use(VueRouter).use(VueSweetalert2).use(VueAxios, axios).mount('#app');

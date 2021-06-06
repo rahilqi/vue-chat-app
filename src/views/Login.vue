@@ -40,14 +40,26 @@ export default {
       var user = {
         email:    this.input.email,
         password: this.input.password,
-        logged:   true
+        logged:   true,
+        token:    ""
       }
-      if(user.email != "" && /\S+@\S+\.\S+/.test(user.email) && user.password != "") {
-
-        $("#btn-auth").html("Logout");
-        localStorage.setItem('user', encodeURI(JSON.stringify(user)));
-        this.$router.push({ path: 'home' });
-      }else {
+      if(user.email != "" && /\S+@\S+\.\S+/.test(user.email) && user.password != ""){
+        this.axios.post('http://localhost:3000/api/user/login', JSON.stringify(user) , 
+          {
+            headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+            }
+          }
+        ).then((response) => {
+          if(response.status == 200){
+            user.token = response.data.token;
+            localStorage.setItem('user', encodeURI(JSON.stringify(user)));
+            $("#btn-auth").html("Logout");
+            this.$router.push({ path: 'home' });
+          }
+        })
+      }else{
         this.$swal({
           icon: 'error',
           title: 'Oops...',

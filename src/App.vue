@@ -2,7 +2,7 @@
   <div id="nav">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="javascript:void(0)" v-on:click="home()">Vue-Chat</a>
+        <a class="navbar-brand" href="javascript:void(0)" v-on:click="home()">Nearby-Chat</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -45,7 +45,6 @@
 </style>
 
 <script>
-
   export default {
     mounted() {
       var user = localStorage.getItem('user');
@@ -59,7 +58,8 @@
         var user                        = localStorage.getItem('user');
         user                            = JSON.parse(decodeURI(user));
         user.logged                     = false;
-        this.$refs.linkToggle.innerText = '';
+        user.token                      = "";
+        this.$refs.linkToggle.innerText = "";
         localStorage.setItem('user', encodeURI(JSON.stringify(user)));
         this.$router.push({ path: 'login' });
       },
