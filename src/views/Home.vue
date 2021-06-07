@@ -30,7 +30,7 @@ export default {
     }
   },
   created(){
-    this.users = this.axios.get('https://jsonplaceholder.typicode.com/todos').then(response => this.users = response);
+    this.axios.get(process.env.VUE_APP_HOME).then(response => this.users = response);
   },
 
   methods: {

@@ -63,12 +63,14 @@ export default {
       navigator.geolocation.getCurrentPosition(this.success);
     }
 
-    this.axios.get('http://localhost:3000/api/avatar').then( response => this.options = response.data );
+    this.axios.get(process.env.VUE_APP_USERNAME).then( response => this.options = response.data );
     this.userId = Math.floor(100000 + Math.random() * 900000);
 
   },
   methods: {
     register() {
+      this.img = this.options.filter(obj => obj.name == this.selected)[0].images.md;
+      
       var user = {
         email:    this.input.email,
         password: this.input.password,
@@ -81,20 +83,31 @@ export default {
       if(user.email == "" || !/\S+@\S+\.\S+/.test(user.email)){
         this.$swal('Please provide correct email!!');
       }
+
       if(user.password == ""){
         this.$swal('Please provide a password!!');
       }
+
       if(user.username == ""){
         this.$swal('Please provide a username!!');
       }
-      
-      $("#btn-auth").html("Logout");
-      this.img = this.options.filter(obj => obj.name == this.selected)[0].images.md;
-      
-      
-      localStorage.setItem('user', encodeURI(JSON.stringify(user)));
-      
-      this.$router.replace({ path: 'home' });
+
+      this.axios.post(process.env.VUE_APP_REGISTER, JSON.stringify(user) , 
+        {
+          headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+          }
+        }
+      ).then((response) => {
+        if(response.status == 200){
+          user.logged = true;
+          user.token  = response.data.token;
+          localStorage.setItem('user', encodeURI(JSON.stringify(user)));
+          $("#btn-auth").html("Logout");
+          this.$router.push({ path: 'home' });
+        }
+      })
     },
     success(position){
       this.input.lat = position.coords.latitude;

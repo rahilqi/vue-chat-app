@@ -44,7 +44,7 @@ export default {
         token:    ""
       }
       if(user.email != "" && /\S+@\S+\.\S+/.test(user.email) && user.password != ""){
-        this.axios.post('http://localhost:3000/api/user/login', JSON.stringify(user) , 
+        this.axios.post(process.env.VUE_APP_LOGIN, JSON.stringify(user) , 
           {
             headers: {
             'Content-Type': 'application/json',
