@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import NotFound from '@/views/NotFound.vue';
 import Register from '@/views/Register.vue';
 import ForgotPassword from '@/views/ForgotPassword.vue';
+import Profile from '@/views/Profile.vue';
 import axios from 'axios'
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
     component: ForgotPassword,
   },
   {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component:NotFound,
@@ -43,7 +49,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.name !== 'home' && !checkAuth()){
-    next()
+    next();
   }else if(to.name == "home" && !checkAuth()){
     next({name: "login"});
   }else if(to.name == "login" && checkAuth()){
@@ -55,7 +61,7 @@ router.beforeEach((to, from, next) => {
 
 function checkAuth(){
   var user = getLoggedUser();
-  axios.post('http://localhost:3000/api/user/login', JSON.stringify(user) , 
+  axios.post(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_LOGIN, JSON.stringify(user) , 
     {
       headers: {
       'Content-Type': 'application/json',
@@ -78,7 +84,8 @@ function checkAuth(){
 
 function getLoggedUser(){
   var user = localStorage.getItem('user');
-  return JSON.parse(decodeURI(user));
+  if(user != null)
+    return JSON.parse(atob(user));
 }
 
 export default router;

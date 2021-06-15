@@ -15,6 +15,7 @@
               {{ option.name }}
             </option>
           </select>
+          <span> {{ selected }}</span>
         </div>
         <div class="col">
           <input type="text" :value="userId" class="form-control" disabled="true" />
@@ -23,7 +24,6 @@
       <div class="mb-3">
         <button type="button" class="btn btn-success" v-on:click="register()">Register</button>
       </div>
-
     </form>
   </div>
 </template>
@@ -39,18 +39,18 @@
 <script>
 import $ from "jquery";
 export default {
-  name: 'Login',
+  name: 'Register',
   data() {
     return {
       input: {
         username: "",
         password: "",
         email:    "",
-        lat:      null,
-        lng:      null,
+        lat:      "",
+        lng:      "",
         logged:   false
       },
-      options:  "",
+      options:  [],
       userId:   "",
       selected: "",
       img:      ""
@@ -63,21 +63,21 @@ export default {
       navigator.geolocation.getCurrentPosition(this.success);
     }
 
-    this.axios.get(process.env.VUE_APP_USERNAME).then( response => this.options = response.data );
+    this.axios.get(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_USERNAME).then( response => this.options = response.data );
     this.userId = Math.floor(100000 + Math.random() * 900000);
 
   },
   methods: {
     register() {
-      this.img = this.options.filter(obj => obj.name == this.selected)[0].images.md;
+      this.img = this.options.filter(obj => obj.name == this.selected)[0].images.lg;
       
       var user = {
         email:    this.input.email,
         password: this.input.password,
         username: this.selected + this.userId,
-        lng:      this.input.lng,
-        lat:      this.input.lat,
-        img:      this.img
+        lng:      this.input.lng.toString(),
+        lat:      this.input.lat.toString(),
+        image:    this.img
       }
 
       if(user.email == "" || !/\S+@\S+\.\S+/.test(user.email)){
@@ -91,8 +91,9 @@ export default {
       if(user.username == ""){
         this.$swal('Please provide a username!!');
       }
+      // console.log(user);
 
-      this.axios.post(process.env.VUE_APP_REGISTER, JSON.stringify(user) , 
+      this.axios.post(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_REGISTER, JSON.stringify(user) , 
         {
           headers: {
           'Content-Type': 'application/json',
@@ -100,11 +101,19 @@ export default {
           }
         }
       ).then((response) => {
-        if(response.status == 200){
+        if(response.data["message"]){
+          this.$swal({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'User already taken!',
+          })
+        }else if(response.status == 200){
           user.logged = true;
+          user.id     = response.data.id;
           user.token  = response.data.token;
-          localStorage.setItem('user', encodeURI(JSON.stringify(user)));
+          localStorage.setItem('user', btoa(JSON.stringify(user)));
           $("#btn-auth").html("Logout");
+          $("#profile").html("My Profile");
           this.$router.push({ path: 'home' });
         }
       })

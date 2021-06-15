@@ -41,22 +41,34 @@ export default {
         email:    this.input.email,
         password: this.input.password,
         logged:   true,
-        token:    ""
+        token:    "",
+        id:       ""
       }
       if(user.email != "" && /\S+@\S+\.\S+/.test(user.email) && user.password != ""){
-        this.axios.post(process.env.VUE_APP_LOGIN, JSON.stringify(user) , 
+        this.axios.post(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_LOGIN, JSON.stringify(user) , 
           {
             headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
             }
           }
-        ).then((response) => {
+        )
+        .then((response) => {
           if(response.status == 200){
             user.token = response.data.token;
-            localStorage.setItem('user', encodeURI(JSON.stringify(user)));
+            user.id    = response.data.id;
+            localStorage.setItem('user', btoa(JSON.stringify(user)));
             $("#btn-auth").html("Logout");
+            $("#profile").html("My Profile");
             this.$router.push({ path: 'home' });
+          }
+        }).catch((error) => {
+          if(error.response.status == 401){
+            this.$swal({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Unauthorized!!! Wrong user data.',
+            })
           }
         })
       }else{

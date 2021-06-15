@@ -1,12 +1,12 @@
 <template>
   <div class="outer">
     <div class="inner">
-      <div v-for="user in users.data" v-bind:key="user.id" class="card" style="width:45%;display: inline-block;margin: 20px 20px; box-shadow: 3px 5px 4px 5px #888888;">
-        <img class="card-img-top" src="https://mdbootstrap.com/img/new/slides/041.jpg" alt="Card image cap">
+      <div v-for="item in users" v-bind:key="item.user.['_id']" class="card" style="width:45%;display: inline-block;margin: 20px 20px; box-shadow: 3px 5px 4px 5px #888888;">
+        <img class="card-img-top" :src="item.user.image" alt="Card image cap">
         <div class="card-body">
-          <h5 class="card-title">{{user.id}}</h5>
-          <p class="card-text">{{user.title}}</p>
-          <a href="#" v-on:click="addFriend" class="btn btn-primary">Add</a>
+          <h5 class="card-title">{{item.user.username}}</h5>
+          <p class="card-text">{{item.title}}</p>
+          <a href="#" v-on:click="addFriend" class="btn btn-primary">Add Friend</a>
         </div>
       </div>
     </div>
@@ -19,6 +19,12 @@
   height: 100%;
   margin-left: 50px;
 }
+
+.card-img-top{
+  height: 400px;
+  width: 100%;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -26,11 +32,30 @@ export default {
   name: 'Home',
   data() {
     return {
-      users: "",
+      users: [],
     }
   },
   created(){
-    this.axios.get(process.env.VUE_APP_HOME).then(response => this.users = response);
+    var user = JSON.parse(atob(localStorage.getItem('user')));
+
+    this.axios.post(
+    process.env.VUE_APP_BASE_URL + "/api/location/nearbyUsers", {
+      user: user.id
+    },
+    {
+      headers: {
+        "Access-Control-Allow-Origin" : "*",
+        "Content-type": "Application/json",
+        "Authorization": `Bearer ` + user.token
+      }   
+    }
+  )
+  .then((response) => {
+      this.users = response.data;
+    },
+    (error) => {
+      console.log(error);
+    });
   },
 
   methods: {

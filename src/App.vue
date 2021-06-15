@@ -8,9 +8,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="javascript:void(0)" id="btn-auth" ref="linkToggle" v-on:click="auth()"></a>
-            </li>
+            <a class="nav-link" href="javascript:void(0)" id="profile" ref="profile" v-on:click="profile()"></a>
+            <a class="nav-link" href="javascript:void(0)" id="btn-auth" ref="linkToggle" v-on:click="auth()"></a>
           </ul>          
         </div>
       </div>
@@ -47,31 +46,38 @@
 <script>
   export default {
     mounted() {
-      var user = localStorage.getItem('user');
-      user     = JSON.parse(decodeURI(user));
+      var user = getUser();
       if(user.logged){
         this.$refs.linkToggle.innerText = 'Logout';
+        this.$refs.profile.innerText    = 'My Profile';
       }
     },
     methods: {
       auth(){
-        var user                        = localStorage.getItem('user');
-        user                            = JSON.parse(decodeURI(user));
+        let user                        = getUser(); 
         user.logged                     = false;
         user.token                      = "";
         this.$refs.linkToggle.innerText = "";
-        localStorage.setItem('user', encodeURI(JSON.stringify(user)));
+        this.$refs.profile.innerText    = "";
+        localStorage.setItem('user', btoa(JSON.stringify(user)));
         this.$router.push({ path: 'login' });
       },
       home(){
-        var user = localStorage.getItem('user');
-        user     = JSON.parse(decodeURI(user));
+        var user = getUser();
         if(user.logged){
           this.$router.push({ path: 'home' });
         }else{
           this.$router.push({ path: 'login' });
         }
+      },
+      profile(){
+        this.$router.push({ path: 'profile' });
       }
     }
+  }
+
+  function getUser(){
+    var user = localStorage.getItem('user');
+    return JSON.parse(atob(user));
   }
 </script>
