@@ -52,6 +52,8 @@ router.beforeEach((to, from, next) => {
     next();
   }else if(to.name == "home" && !checkAuth()){
     next({name: "login"});
+  }else if(to.name == "profile" && !checkAuth()){
+    next({name: "login"});
   }else if(to.name == "login" && checkAuth()){
     next({name: "home"});
   }else{
@@ -61,6 +63,7 @@ router.beforeEach((to, from, next) => {
 
 function checkAuth(){
   var user = getLoggedUser();
+
   axios.post(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_LOGIN, JSON.stringify(user) , 
     {
       headers: {

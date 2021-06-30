@@ -15,7 +15,6 @@
               {{ option.name }}
             </option>
           </select>
-          <span> {{ selected }}</span>
         </div>
         <div class="col">
           <input type="text" :value="userId" class="form-control" disabled="true" />
@@ -53,7 +52,8 @@ export default {
       options:  [],
       userId:   "",
       selected: "",
-      img:      ""
+      img:      "",
+      apiKey: ""
     }
   },
   created(){
@@ -70,14 +70,14 @@ export default {
   methods: {
     register() {
       this.img = this.options.filter(obj => obj.name == this.selected)[0].images.lg;
-      
       var user = {
         email:    this.input.email,
         password: this.input.password,
         username: this.selected + this.userId,
         lng:      this.input.lng.toString(),
         lat:      this.input.lat.toString(),
-        image:    this.img
+        image:    this.img,
+        apiKey:   this.apiKey
       }
 
       if(user.email == "" || !/\S+@\S+\.\S+/.test(user.email)){
@@ -101,20 +101,24 @@ export default {
           }
         }
       ).then((response) => {
-        if(response.data["message"]){
-          this.$swal({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'User already taken!',
-          })
-        }else if(response.status == 200){
-          user.logged = true;
-          user.id     = response.data.id;
-          user.token  = response.data.token;
+        if(response.status == 200){
+          user.logged    = true;
+          user.id        = response.data.id;
+          user.token     = response.data.token;
+          user.username  = response.data.username;
+          user.apiKey    = response.data.apiKey;
           localStorage.setItem('user', btoa(JSON.stringify(user)));
           $("#btn-auth").html("Logout");
           $("#profile").html("My Profile");
           this.$router.push({ path: 'home' });
+        }
+      }).catch((error) => {
+        if(error.response.status == 401){
+          this.$swal({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Unauthorized!!! User exists',
+          })
         }
       })
     },

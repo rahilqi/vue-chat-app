@@ -18,10 +18,11 @@
     </form>
   </div>
 </template>
+    
+
 
 <script>
 import $ from "jquery";
-
 export default {
   name: 'Login',
   data() {
@@ -42,7 +43,8 @@ export default {
         password: this.input.password,
         logged:   true,
         token:    "",
-        id:       ""
+        id:       "",
+        username: "",
       }
       if(user.email != "" && /\S+@\S+\.\S+/.test(user.email) && user.password != ""){
         this.axios.post(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_LOGIN, JSON.stringify(user) , 
@@ -55,8 +57,10 @@ export default {
         )
         .then((response) => {
           if(response.status == 200){
-            user.token = response.data.token;
-            user.id    = response.data.id;
+            user.token    = response.data.token;
+            user.id       = response.data.id;
+            user.username = response.data.username;
+            user.apiKey   = response.data.apiKey;
             localStorage.setItem('user', btoa(JSON.stringify(user)));
             $("#btn-auth").html("Logout");
             $("#profile").html("My Profile");
