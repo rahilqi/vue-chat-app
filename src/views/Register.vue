@@ -10,7 +10,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <select v-model="selected">
+          <select class="form-select" aria-label="Default select example" v-model="selected">
             <option v-for="option in options" v-bind:key="option.id">
               {{ option.name }}
             </option>
@@ -18,6 +18,14 @@
         </div>
         <div class="col">
           <input type="text" :value="userId" class="form-control" disabled="true" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          Username: 
+        </div>
+        <div class="col">
+          <input type="text" :value="selected + userId" class="form-control" disabled="true" />
         </div>
       </div>
       <div class="mb-3">
@@ -65,10 +73,10 @@ export default {
 
     this.axios.get(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_USERNAME).then( response => this.options = response.data );
     this.userId = Math.floor(100000 + Math.random() * 900000);
-
   },
   methods: {
     register() {
+      let flag = true;
       this.img = this.options.filter(obj => obj.name == this.selected)[0].images.lg;
       var user = {
         email:    this.input.email,
@@ -82,45 +90,55 @@ export default {
 
       if(user.email == "" || !/\S+@\S+\.\S+/.test(user.email)){
         this.$swal('Please provide correct email!!');
+        flag = false;
       }
 
       if(user.password == ""){
         this.$swal('Please provide a password!!');
+        flag = false;
       }
 
       if(user.username == ""){
         this.$swal('Please provide a username!!');
+        flag = false;
       }
-      // console.log(user);
-
-      this.axios.post(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_REGISTER, JSON.stringify(user) , 
-        {
-          headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
+      if(flag){
+        this.axios.post(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_REGISTER, JSON.stringify(user) , 
+          {
+            headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+            }
           }
-        }
-      ).then((response) => {
-        if(response.status == 200){
-          user.logged    = true;
-          user.id        = response.data.id;
-          user.token     = response.data.token;
-          user.username  = response.data.username;
-          user.apiKey    = response.data.apiKey;
-          localStorage.setItem('user', btoa(JSON.stringify(user)));
-          $("#btn-auth").html("Logout");
-          $("#profile").html("My Profile");
-          this.$router.push({ path: 'home' });
-        }
-      }).catch((error) => {
-        if(error.response.status == 401){
-          this.$swal({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Unauthorized!!! User exists',
-          })
-        }
-      })
+        ).then((response) => {
+          if(response.status == 200){
+            user.logged    = true;
+            user.id        = response.data.id;
+            user.token     = response.data.token;
+            user.username  = response.data.username;
+            user.apiKey    = response.data.apiKey;
+            localStorage.setItem('user', btoa(JSON.stringify(user)));
+            $("#btn-auth").html("Logout");
+            $("#profile").html("My Profile");
+            $("#friendList").html("Friend Requests");
+            this.$router.push({ path: 'home' });
+          }
+        }).catch((error) => {
+          if(error.response.status == 401){
+            this.$swal({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Unauthorized!!! User exists',
+            })
+          }
+        })
+      }else{
+        this.$swal({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please fill all the fields!',
+        })
+      }
     },
     success(position){
       this.input.lat = position.coords.latitude;

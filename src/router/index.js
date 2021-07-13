@@ -5,6 +5,8 @@ import NotFound from '@/views/NotFound.vue';
 import Register from '@/views/Register.vue';
 import ForgotPassword from '@/views/ForgotPassword.vue';
 import Profile from '@/views/Profile.vue';
+import FriendRequests from '@/views/FriendRequest.vue';
+import Conversation from '@/views/Conversation.vue';
 import axios from 'axios'
 
 const routes = [
@@ -36,6 +38,16 @@ const routes = [
     component: Profile,
   },
   {
+    path: "/friendrequests",
+    name: "friendrequests",
+    component: FriendRequests,
+  },
+  {
+    path: "/conversation/:data",
+    name: "conversation",
+    component: Conversation,
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component:NotFound,
@@ -48,11 +60,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'home' && !checkAuth()){
-    next();
-  }else if(to.name == "home" && !checkAuth()){
+ if(to.name == "home" && !checkAuth()){
     next({name: "login"});
-  }else if(to.name == "profile" && !checkAuth()){
+  }else if(!checkAuth() && to.name == "friendrequests"){
+    next({name: "login"});
+  }else if(!checkAuth() && to.name == "conversation/:data"){
+    next({name: "login"});
+  }else if(!checkAuth() && to.name == "profile"){
     next({name: "login"});
   }else if(to.name == "login" && checkAuth()){
     next({name: "home"});

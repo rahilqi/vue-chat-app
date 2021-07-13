@@ -8,6 +8,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <a class="nav-link" href="javascript:void(0)" id="friendList" ref="friendList" v-on:click="friendList()"></a>
             <a class="nav-link" href="javascript:void(0)" id="profile" ref="profile" v-on:click="profile()"></a>
             <a class="nav-link" href="javascript:void(0)" id="btn-auth" ref="linkToggle" v-on:click="auth()"></a>
           </ul>          
@@ -32,6 +33,7 @@
   .outer{
     border: 1px solid white;
     margin: 30px 30px;
+    margin-right: 400px;
     height: 600px;
     border-radius: 5px;
     box-shadow: 5px 10px 8px 10px #888888;
@@ -41,15 +43,17 @@
     border: 2px solid red;
     border-radius: 5px;
   }
+
 </style>
 
 <script>
   export default {
     mounted() {
       var user = getUser();
-      if(user.logged){
+      if(user != null && user.logged){
         this.$refs.linkToggle.innerText = 'Logout';
         this.$refs.profile.innerText    = 'My Profile';
+        this.$refs.friendList.innerText = 'Friend Requests';
       }
     },
     methods: {
@@ -59,25 +63,30 @@
         user.token                      = "";
         this.$refs.linkToggle.innerText = "";
         this.$refs.profile.innerText    = "";
+        this.$refs.friendList.innerText = "";
         localStorage.setItem('user', btoa(JSON.stringify(user)));
-        this.$router.push({ path: 'login' });
+        this.$router.push({ path: '/login' });
       },
       home(){
         var user = getUser();
         if(user.logged){
-          this.$router.push({ path: 'home' });
+          this.$router.push({ path: '/home' });
         }else{
-          this.$router.push({ path: 'login' });
+          this.$router.push({ path: '/login' });
         }
       },
       profile(){
-        this.$router.push({ path: 'profile' });
+        this.$router.push({ path: '/profile' });
+      },
+      friendList(){
+        this.$router.push({ path: '/friendrequests' });
       }
     }
   }
 
   function getUser(){
     var user = localStorage.getItem('user');
-    return JSON.parse(atob(user));
+    if(user != null)
+      return JSON.parse(atob(user));
   }
 </script>

@@ -18,7 +18,17 @@
     </form>
   </div>
 </template>
-    
+<style type="text/css">
+  a {
+    text-decoration: none ;
+  }
+
+  a:hover {
+    color:black;
+    text-decoration:none;
+    cursor:pointer;
+  }
+</style>
 
 
 <script>
@@ -64,7 +74,8 @@ export default {
             localStorage.setItem('user', btoa(JSON.stringify(user)));
             $("#btn-auth").html("Logout");
             $("#profile").html("My Profile");
-            this.$router.push({ path: 'home' });
+            $("#friendList").html("Friend Requests");
+            this.$router.push({ path: '/home' });
           }
         }).catch((error) => {
           if(error.response.status == 401){
