@@ -75,8 +75,6 @@ export default {
     }
   },
   created(){
-    console.log(atob(this.$router.currentRoute["_value"].params.data))
-
     var user  = JSON.parse(atob(localStorage.getItem('user')));
     this.user = user;
     this.axios.get(process.env.VUE_APP_BASE_URL + "/api/user/" + user.id, 
@@ -96,9 +94,8 @@ export default {
     connect: function () {
         console.log('socket connected')
     },
-    output: function (data) {
-      alert(1)
-        console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', data)
+    emit_method: function (data) {
+      alert(data)
     }
   },
   methods: {
@@ -109,13 +106,14 @@ export default {
         by: "rahil",
         timestamp: new Date().toLocaleString()
       })
+      var cid = atob(this.$router.currentRoute["_value"].params.id);
       // $("#").focus();
-      let y = this.$socket.emit('sendmessage', {
+      this.$socket.emit('sendmessage', {
         sender: this.user.id,
-        connectionid: this.$router.currentRoute["_value"].params.id,
+        connectionid: cid,
         message: msg,
       })
-      console.log(y)
+      // console.log(y)
       // var x = this.$socket.emit('findmessage', {
       //   sender: this.user.id,
       //   connectionid: this.$router.currentRoute["_value"].params.id,
