@@ -43,7 +43,7 @@ const routes = [
     component: FriendRequests,
   },
   {
-    path: "/conversation/:data",
+    path: "/conversation/:id",
     name: "conversation",
     component: Conversation,
     props: true
@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
     next({name: "login"});
   }else if(!checkAuth() && to.name == "friendrequests"){
     next({name: "login"});
-  }else if(!checkAuth() && to.name == "conversation/:data"){
+  }else if(!checkAuth() && to.name == "conversation/:id"){
     next({name: "login"});
   }else if(!checkAuth() && to.name == "profile"){
     next({name: "login"});
