@@ -144,7 +144,7 @@ export default {
     chat(item){
       this.$router.push({
         name: 'conversation',
-        params: { data: btoa(item["_id"])}
+        params: { id: btoa(item["_id"])}
       });
     }
   }

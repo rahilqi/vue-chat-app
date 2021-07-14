@@ -19,7 +19,7 @@
     <div>
       <input class="form-control chatinput" type="text" name="chatBox">
     </div>
-    <button class="btn btn-success" v-on:click="sendMessage(index)">Send</button>
+    <button class="btn btn-success" v-on:click="sendMessage()">Send</button>
   </div>
 </template>
 <style type="text/css">
@@ -75,6 +75,8 @@ export default {
     }
   },
   created(){
+    console.log(atob(this.$router.currentRoute["_value"].params.data))
+
     var user  = JSON.parse(atob(localStorage.getItem('user')));
     this.user = user;
     this.axios.get(process.env.VUE_APP_BASE_URL + "/api/user/" + user.id, 
@@ -91,25 +93,35 @@ export default {
     .then( response => this.img = response.data );
   },
   sockets: {
-    connect: function() {
-      console.log('socket connected')
+    connect: function () {
+        console.log('socket connected')
     },
-    sendmessage: function(data) {
-      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', data)
+    output: function (data) {
+      alert(1)
+        console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', data)
     }
   },
   methods: {
-    sendMessage: function(index) {
+    sendMessage: function() {
       var msg = $(".chatinput").val();
-      // socket.emit('chat message', msg);
-
       this.messages.push({
         name: msg,
         by: "rahil",
         timestamp: new Date().toLocaleString()
       })
-      $("#"+index).focus();
-      this.$socket.emit('sendmessage', msg)
+      // $("#").focus();
+      let y = this.$socket.emit('sendmessage', {
+        sender: this.user.id,
+        connectionid: this.$router.currentRoute["_value"].params.id,
+        message: msg,
+      })
+      console.log(y)
+      // var x = this.$socket.emit('findmessage', {
+      //   sender: this.user.id,
+      //   connectionid: this.$router.currentRoute["_value"].params.id,
+      //   message: msg,
+      // })
+      // console.log(x)
     }
   }
 }

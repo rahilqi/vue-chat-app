@@ -46,6 +46,7 @@ const routes = [
     path: "/conversation/:data",
     name: "conversation",
     component: Conversation,
+    props: true
   },
   {
     path: "/:catchAll(.*)",
