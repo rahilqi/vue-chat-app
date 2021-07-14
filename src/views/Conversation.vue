@@ -88,14 +88,14 @@ export default {
         'Authorization': `Bearer ` + user.token
       }
     })
-    .then( response =>     this.img = response.data );
+    .then( response => this.img = response.data );
   },
   sockets: {
     connect: function() {
-        console.log('socket conneceweweweweweted')
+      console.log('socket connected')
     },
-    customEmit: function(data) {
-        console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', data)
+    sendmessage: function(data) {
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', data)
     }
   },
   methods: {
@@ -109,7 +109,7 @@ export default {
         timestamp: new Date().toLocaleString()
       })
       $("#"+index).focus();
-      this.socket.emit('customEmit', msg)
+      this.$socket.emit('sendmessage', msg)
     }
   }
 }
