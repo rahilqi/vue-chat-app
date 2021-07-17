@@ -1,7 +1,7 @@
   <template>  
     <div class="container">
-      <div class="container chatBox">
-        <div class="messages" v-for="(message, index) in messages" v-bind:key="index" :id="index">
+      <div class="container chatBox" id="chatBox">
+        <div class="messages" v-for="(message, index) in messages" v-bind:key="index" :id="index+1">
           <div class="row msg">
             <div class="col-md-1">
               <img :src="img" class="img">
@@ -17,7 +17,7 @@
       </div>
       <div class="row inputBox">
         <div class="col-md-11">
-          <input class="form-control chatinput" required="true" type="text" name="chatBox">
+          <input class="form-control chatinput" required="true" type="text" name="chatBox" v-on:keyup.enter="onEnter">
         </div>
         <div class="col-md-1">
           <button class="btn btn-primary" v-on:click="sendMessage()">Send</button>
@@ -30,10 +30,9 @@
       border: 0px solid black;
       height: 550px;
       margin-bottom: 20px;
-      margin-top: 43px;
+      margin-top: 23px;
       box-shadow: 3px 4px 5px 7px #1c859cb0;
-      overflow: auto;
-      scrollbar-color: dark;
+      overflow-y: auto;
     }
 
     .chat-time{
@@ -90,38 +89,28 @@
     created(){
       var user  = JSON.parse(atob(localStorage.getItem('user')));
       this.user = user;
-      this.axios.get(process.env.VUE_APP_BASE_URL + "/api/user/" + user.id, 
-      {
-        apiKey: user.apiKey
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Authorization': `Bearer ` + user.token
-        }
-      })
-      .then( response => this.img = response.data );
+      
     },
     sockets:{
       SOCKET_output(data){
-
         this.messages.push({
           name: data.value,
           by: "Rahil",
           timestamp: new Date().toLocaleString()
-        })
+        });
+        
         $(".chatinput").val("");
-
-        // console.log(document.querySelector(".chatBox").children.length, document.querySelector(".chatBox").children)
-        // document.getElementById(document.querySelector(".chatBox").children.length).scrollIntoView()
-        // var id = document.querySelector('.chatBox').children.length;
-        // $(".chatBox").scrollIntoView;
-
+        $('#chatBox').animate({ scrollTop: $('#chatBox').prop("scrollHeight")}, 500);
       }
     },
     methods: {
+      onEnter(){
+        this.sendToSocket();
+      },
       sendMessage: function() {
+        this.sendToSocket();
+      },
+      sendToSocket(){
         var msg = $(".chatinput").val();
         if(msg.length > 0){
           var cid = atob(this.$router.currentRoute["_value"].params.id);

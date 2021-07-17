@@ -13,10 +13,10 @@
           <th scope="row">
             <div class="row">
               <div class="col">
-                <a class="nav-link btn" href="javascript:void(0)" :id="friend.userid" v-on:click="acceptReq(friend)">Accept</a>
+                <a class="nav-link btn" style="color: #1c859cb0;" href="javascript:void(0)" :id="friend.userid" v-on:click="acceptReq(friend)">Accept</a>
               </div>
               <div class="col">
-                <button class="btn" :id="chatId(friend.username)" v-on:click="chat(friend)"><img class="chat-img" src="@/assets/chat.png"></button>
+                <button class="btn btn1" :id="chatId(friend.username)" v-on:click="chat(friend)" disabled="true"><img class="chat-img" src="@/assets/chat.png"></button>
               </div>
             </div>
           </th>  
@@ -26,10 +26,10 @@
   </div>
 </template>
 <style type="text/css">
-  .chat-img{
-    height: 30px;
-    width: 30px;
-  }
+.chat-img{
+  height: 30px;
+  width: 30px;
+}
 </style>
 <script type="text/javascript">
 import $ from "jquery";

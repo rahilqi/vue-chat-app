@@ -26,8 +26,8 @@
     <ul class="list-group">
       <li class="list-group-item disabled active" aria-disabled="true" style="text-align: center; font-weight: bold;"><img class="friends-img" src="@/assets/friends.png"></li>
       <div v-if="friends.length > 0">
-        <li  class="list-group-item" v-for="(friend) in friends" v-bind:key='friend["_id"]'>
-          <a title="Click to chat" data-toggle="tooltip" href="javascript:void(0)" v-on:click="chat(friend)"> {{ friend.username }} </a>
+        <li  class="list-group-item" v-for="(friend) in friends" v-bind:key='friend["_id"]' style="text-align: center;">
+           <a title="Click to chat" data-toggle="tooltip" href="javascript:void(0)" v-on:click="chat(friend)">{{ friend.username }}</a>
         </li>
       </div>
 
@@ -42,6 +42,10 @@
 </template>
 
 <style type="text/css">
+.chat-img{
+  height: 20px !important;
+  width: 20px !important;
+}
 .no-friend{
   text-align: center;
   font-weight: bold;

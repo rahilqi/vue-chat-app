@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg ng">
       <div class="container-fluid">
         <a class="navbar-brand" href="javascript:void(0)" v-on:click="home()">Nearby-Chat</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,43 +20,61 @@
 </template>
 
 <style type="text/css">
-  form{
-    border: 2px solid white;
-    padding: 30px;
-    margin-left: 100px;
-    margin-right: 100px;
-    width:50%;
-    margin-left: 25%;
-    margin-top: 10%;
-    box-shadow: 3px 4px 5px 7px #1c859cb0;
-  }
-  
-  .outer{
-    border: 1px solid white;
-    margin: 10px 10px;
-    margin-right: 400px;
-    height: 655px;
-    box-shadow: 3px 4px 5px 7px #1c859cb0;
-    padding: 5px 5px;
-  }
-  .highlight{
-    border: 2px solid red;
-    border-radius: 5px;
-  }
-  .list-group-item.active{
-    background-color: #1c859cb0 !important;
-    border-color: #fff !important;
-  }
-  .btn-primary {
-      color: #fff;
-      background-color: #1c859cb0 !important;
-      border-color: #fff !important;
-    }
-  .btn-success {
+form{
+  border: 2px solid white;
+  padding: 30px;
+  margin-left: 100px;
+  margin-right: 100px;
+  width:50%;
+  margin-left: 25%;
+  margin-top: 10%;
+  box-shadow: 3px 4px 5px 7px #1c859cb0;
+}
+a.nav-link{
+  color: white;
+}
+.navbar-brand{
+  color: white;
+}
+
+a:hover{
+  color: black !important;
+}
+.ng{
+  background-color: #1c859cb0 !important;
+}
+
+.outer{
+  border: 1px solid white;
+  margin: 10px 10px;
+  margin-right: 400px;
+  height: 655px;
+  box-shadow: 3px 4px 5px 7px #1c859cb0;
+  padding: 5px 5px;
+}
+
+.highlight{
+  border: 2px solid red;
+  border-radius: 5px;
+}
+
+.list-group-item.active{
+  background-color: #1c859cb0 !important;
+  border: none !important;
+}
+.list-group-item{
+
+}
+.btn-primary {
     color: #fff;
     background-color: #1c859cb0 !important;
     border-color: #fff !important;
   }
+.btn-success {
+  color: #fff;
+  background-color: #1c859cb0 !important;
+  border: #fff !important;
+}
 </style>
 
 <script>
