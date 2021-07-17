@@ -28,65 +28,79 @@
     width:50%;
     margin-left: 25%;
     margin-top: 10%;
-    box-shadow: 5px 10px 8px 10px #888888;
+    box-shadow: 3px 4px 5px 7px #1c859cb0;
   }
+  
   .outer{
     border: 1px solid white;
-    margin: 30px 30px;
+    margin: 10px 10px;
     margin-right: 400px;
-    height: 600px;
-    border-radius: 5px;
-    box-shadow: 5px 10px 8px 10px #888888;
+    height: 655px;
+    box-shadow: 3px 4px 5px 7px #1c859cb0;
     padding: 5px 5px;
   }
   .highlight{
     border: 2px solid red;
     border-radius: 5px;
   }
-
+  .list-group-item.active{
+    background-color: #1c859cb0 !important;
+    border-color: #fff !important;
+  }
+  .btn-primary {
+      color: #fff;
+      background-color: #1c859cb0 !important;
+      border-color: #fff !important;
+    }
+  .btn-success {
+    color: #fff;
+    background-color: #1c859cb0 !important;
+    border-color: #fff !important;
+  }
 </style>
 
 <script>
-  export default {
-    mounted() {
+export default {
+  mounted() {
+    var user = getUser();
+    if(user != null && user.logged){
+      // $("#friendList1").html("<p>hello</p>");
+      this.$refs.linkToggle.innerText = 'Logout';
+      this.$refs.profile.innerText    = 'My Profile';
+      this.$refs.friendList.innerText = 'Friend Requests';
+    }
+  },
+  methods: {
+    auth(){
+      let user                        = getUser(); 
+      user.logged                     = false;
+      user.token                      = "";
+      this.$refs.linkToggle.innerText = "";
+      this.$refs.profile.innerText    = "";
+      this.$refs.friendList.innerText = "";
+      localStorage.setItem('user', btoa(JSON.stringify(user)));
+      this.$router.push({ path: '/login' });
+    },
+    home(){
       var user = getUser();
-      if(user != null && user.logged){
-        this.$refs.linkToggle.innerText = 'Logout';
-        this.$refs.profile.innerText    = 'My Profile';
-        this.$refs.friendList.innerText = 'Friend Requests';
+      if(user.logged){
+        this.$router.push({ path: '/home' });
+      }else{
+        this.$router.push({ path: '/login' });
       }
     },
-    methods: {
-      auth(){
-        let user                        = getUser(); 
-        user.logged                     = false;
-        user.token                      = "";
-        this.$refs.linkToggle.innerText = "";
-        this.$refs.profile.innerText    = "";
-        this.$refs.friendList.innerText = "";
-        localStorage.setItem('user', btoa(JSON.stringify(user)));
-        this.$router.push({ path: '/login' });
-      },
-      home(){
-        var user = getUser();
-        if(user.logged){
-          this.$router.push({ path: '/home' });
-        }else{
-          this.$router.push({ path: '/login' });
-        }
-      },
-      profile(){
-        this.$router.push({ path: '/profile' });
-      },
-      friendList(){
-        this.$router.push({ path: '/friendrequests' });
-      }
+    profile(){
+      this.$router.push({ path: '/profile' });
+    },
+    friendList(){
+      this.$router.push({ path: '/friendrequests' });
     }
   }
+}
 
-  function getUser(){
-    var user = localStorage.getItem('user');
-    if(user != null)
-      return JSON.parse(atob(user));
-  }
+function getUser(){
+  var user = localStorage.getItem('user');
+  if(user != null)
+    return JSON.parse(atob(user));
+}
 </script>

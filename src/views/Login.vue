@@ -20,7 +20,8 @@
 </template>
 <style type="text/css">
   a {
-    text-decoration: none ;
+    text-decoration: none;
+    color: #1c859cb0;
   }
 
   a:hover {

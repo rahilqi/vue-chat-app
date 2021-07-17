@@ -20,14 +20,13 @@
           <input type="text" :value="userId" class="form-control" disabled="true" />
         </div>
       </div>
+      <br>
       <div class="row">
-        <div class="col">
-          Username: 
-        </div>
-        <div class="col">
-          <input type="text" :value="selected + userId" class="form-control" disabled="true" />
+        <div class="col mb-9">
+          <input type="text" :value="userName()" class="form-control" disabled="true" />
         </div>
       </div>
+      <br>
       <div class="mb-3">
         <button type="button" class="btn btn-success" v-on:click="register()">Register</button>
       </div>
@@ -65,6 +64,7 @@ export default {
     }
   },
   created(){
+    console.log(this.selected)
     if(!navigator.geolocation) {
       return;
     } else {
@@ -75,6 +75,13 @@ export default {
     this.userId = Math.floor(100000 + Math.random() * 900000);
   },
   methods: {
+    userName(){
+      if(this.selected == ""){
+        return "Please select a username from the dropdown"
+      }else{
+        return this.selected + this.userId;
+      }
+    },
     register() {
       let flag = true;
       this.img = this.options.filter(obj => obj.name == this.selected)[0].images.lg;

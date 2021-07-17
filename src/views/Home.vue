@@ -1,7 +1,7 @@
 <template>
   <div class="outer mb-3">
     <div class="inner" v-if="users.length > 0">
-      <div v-for="item in users" v-bind:key="item.id"  :id="userid(item.username)" class="card" style="width:45%;display: inline-block;margin: 20px 20px; box-shadow: 3px 5px 4px 5px #888888;">
+      <div v-for="item in users" v-bind:key="item.id"  :id="userid(item.username)" class="card" style="width:45%;display: inline-block;margin: 20px 20px; box-shadow: 3px 5px 4px 5px #1c859cb0;">
         <img class="card-img-top" :src="item.image" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title" style=""><b>{{item.username}}</b></h5>
@@ -22,16 +22,31 @@
       </div>
     </div>
   </div>
-  <div class="friend_list">
+  <div v:if="friends.length > 0" class="friend_list">
     <ul class="list-group">
-      <li class="list-group-item" v-for="(friend) in friends" v-bind:key='friend["_id"]'>
-        <a href="javascript:void(0)" v-on:click="chat(friend)"> {{ friend.username }} </a>
-      </li>
+      <li class="list-group-item disabled active" aria-disabled="true" style="text-align: center; font-weight: bold;"><img class="friends-img" src="@/assets/friends.png"></li>
+      <div v-if="friends.length > 0">
+        <li  class="list-group-item" v-for="(friend) in friends" v-bind:key='friend["_id"]'>
+          <a title="Click to chat" data-toggle="tooltip" href="javascript:void(0)" v-on:click="chat(friend)"> {{ friend.username }} </a>
+        </li>
+      </div>
+
+      <div v-else>
+        <li  class="list-group-item no-friend">
+          No friends
+        </li>
+      </div>
+
     </ul>
   </div>
 </template>
 
 <style type="text/css">
+.no-friend{
+  text-align: center;
+  font-weight: bold;
+  font-size: 13px;
+}
 .inner{
   overflow-y: auto;
   height: 100%;
@@ -48,6 +63,7 @@
   height: 400px;
   width: 100%;
 }
+
 .friend_list{
   position: fixed;
   right: 10px;
@@ -57,6 +73,12 @@
   width: 300px;
   margin-bottom: 30px;
 }
+
+.friends-img{
+  height: 50px;
+  width: 50px;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -70,7 +92,7 @@ export default {
       friends: {}
     }
   },
-  mounted(){
+  created(){
     var user = JSON.parse(atob(localStorage.getItem('user')));
     
     this.axios.post(

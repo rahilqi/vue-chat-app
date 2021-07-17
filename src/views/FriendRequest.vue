@@ -1,22 +1,22 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Username</th>
+          <th scope="col"></th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(friend, i) in friend_reqs" :key="i">
-          <th scope="row">{{ friend.username }}</th>  
+          <th scope="row" style="padding: 20px 20px;">{{ friend.username }}</th>  
           <th scope="row">
             <div class="row">
               <div class="col">
                 <a class="nav-link btn" href="javascript:void(0)" :id="friend.userid" v-on:click="acceptReq(friend)">Accept</a>
               </div>
               <div class="col">
-                <button type="button" class="btn btn-secondary" :id="chatId(friend.username)" v-on:click="chat(friend)" disabled="true">Chat</button>
+                <button class="btn" :id="chatId(friend.username)" v-on:click="chat(friend)"><img class="chat-img" src="@/assets/chat.png"></button>
               </div>
             </div>
           </th>  
@@ -25,6 +25,12 @@
     </table>
   </div>
 </template>
+<style type="text/css">
+  .chat-img{
+    height: 30px;
+    width: 30px;
+  }
+</style>
 <script type="text/javascript">
 import $ from "jquery";
 
@@ -78,7 +84,10 @@ export default {
       });
     },
     chat(item){
-      console.log(item);
+      this.$router.push({
+        name: 'conversation',
+        params: { id: btoa(item.userid)}
+      });
     },
     chatId(data){
       return data.match(/\d+/g)[0];
