@@ -4,13 +4,13 @@
         <div class="messages" v-for="(message, index) in messages" v-bind:key="index" :id="index+1">
           <div class="row msg">
             <div class="col-md-1">
-              <img :src="img" class="img">
+              <img :src="message.sender.image" class="img">
             </div>
             <div class="col-md-11" style="margin-top: 23px; font-weight: bold;">
-              {{ message.name }}
+              {{ message.value }}
             </div>
             <div class="chat-time">
-              {{ message.timestamp }}
+              {{ date(message.created_at) }}
             </div>
           </div>
         </div>
@@ -58,52 +58,55 @@
     }
   </style>
   <script type="text/javascript">
-
   import $ from "jquery";
   export default {
     name: 'Conversation',
     data() {
       return {
         user: {},
-        img: "https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/lg/88-bird-brain.jpg",
-        connection: null,
-        messages: [{
-          name: "Rahil",
-          by: "me",
-          timestamp: new Date().toLocaleString()
-
-        },
-        {
-          name: "Rahil",
-          by: "me",
-          timestamp: new Date().toLocaleString()
-
-        },
-        {
-          name: "Rahil",
-          by: "you",
-          timestamp: new Date().toLocaleString()
-        }]
+        img: "",
+        messages: []
       }
     },
     created(){
       var user  = JSON.parse(atob(localStorage.getItem('user')));
       this.user = user;
-      
+      // console.log(atob(this.$router.currentRoute["_value"].params.id), this.user, user.apiKey, user.token)
+
+      this.axios.post(
+        process.env.VUE_APP_BASE_URL + "/api/conversations/getallconversations/"+this.user.id, {
+          apiKey:   this.user.apiKey,
+          sender:   this.user.id,
+          receiver: atob(this.$router.currentRoute["_value"].params.id)
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin" : "*",
+            "Content-type": "Application/json",
+            "Authorization": `Bearer ` + this.user.token
+          }
+        }
+      )
+      .then((response) => {
+        this.messages = response.data;
+
+      },
+      (error) => {
+        console.log(error);
+      });
+
     },
     sockets:{
       SOCKET_output(data){
-        this.messages.push({
-          name: data.value,
-          by: "Rahil",
-          timestamp: new Date().toLocaleString()
-        });
-        
+        this.messages.push(data[0]);        
         $(".chatinput").val("");
         $('#chatBox').animate({ scrollTop: $('#chatBox').prop("scrollHeight")}, 500);
       }
     },
     methods: {
+      date(val){
+        return new Date(val).toLocaleString()
+      },
       onEnter(){
         this.sendToSocket();
       },
@@ -113,11 +116,11 @@
       sendToSocket(){
         var msg = $(".chatinput").val();
         if(msg.length > 0){
-          var cid = atob(this.$router.currentRoute["_value"].params.id);
+          var conid = atob(this.$router.currentRoute["_value"].params.id);
           
           this.$socket.emit('sendmessage', {
             sender: this.user.id,
-            connectionid: cid,
+            connectionid: conid,
             message: msg,
           })
         }

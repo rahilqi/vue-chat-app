@@ -112,11 +112,11 @@ export default {
     }
   )
   .then((response) => {
-      this.users = response.data;
-    },
-    (error) => {
-      console.log(error);
-    });
+    this.users = response.data;
+  },
+  (error) => {
+    console.log(error);
+  });
 
     this.axios.post(
       process.env.VUE_APP_BASE_URL + "/api/connection/" + user.id + "/friends", {
