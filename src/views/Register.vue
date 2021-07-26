@@ -71,7 +71,7 @@ export default {
     }
 
     this.axios.get(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_USERNAME).then( response => this.options = response.data );
-    this.userId = Math.floor(100000 + Math.random() * 900000);
+    this.userId = Math.random().toString(20).substr(2, 6).toUpperCase();
   },
   methods: {
     userName(){
