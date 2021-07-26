@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="true">
     <table class="table">
       <thead>
         <tr>
@@ -23,6 +23,9 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div v-else>
+    hi
   </div>
 </template>
 <style type="text/css">
