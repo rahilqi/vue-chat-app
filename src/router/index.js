@@ -5,6 +5,7 @@ import NotFound from '@/views/NotFound.vue';
 import Register from '@/views/Register.vue';
 import ForgotPassword from '@/views/ForgotPassword.vue';
 import Profile from '@/views/Profile.vue';
+import BlockedList from '@/views/BlockedList.vue';
 import FriendRequests from '@/views/FriendRequest.vue';
 import Conversation from '@/views/Conversation.vue';
 import axios from 'axios'
@@ -26,6 +27,11 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register,
+  },
+  {
+    path: "/blockedlist",
+    name: "blockedlist",
+    component: BlockedList,
   },
   {
     path: "/fpassword",
@@ -64,6 +70,8 @@ router.beforeEach((to, from, next) => {
  if(to.name == "home" && !checkAuth()){
     next({name: "login"});
   }else if(!checkAuth() && to.name == "friendrequests"){
+    next({name: "login"});
+  }else if(!checkAuth() && to.name == "blockedlist"){
     next({name: "login"});
   }else if(!checkAuth() && to.name == "conversation/:id"){
     next({name: "login"});

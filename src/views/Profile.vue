@@ -1,6 +1,6 @@
 <template>
   <form>
-    <h1 style="text-align:center;padding: 15px;text-shadow: 3px 3px 4px #777;"><b>{{ user.username }}</b></h1>
+    <h1 style="text-align:center;padding: 15px;text-shadow: 3px 3px 4px #777;"><b>{{ user_name }}</b></h1>
     <div class="mb-3">
       <input type="email" name="email" class="form-control" v-model="user.email" disabled="true" />
     </div>
@@ -49,13 +49,15 @@ export default {
       user: {},
       selected: "",
       options: [],
-      userId: ""
+      userId: "",
+      user_name: ""
     }
   },
   created(){
     var user      = JSON.parse(atob(localStorage.getItem('user')));
     this.user     = user;
     this.selected = user.username;
+    this.user_name = user.username;
     this.userId   = Math.floor(100000 + Math.random() * 900000);
     this.axios.get(process.env.VUE_APP_BASE_URL + process.env.VUE_APP_USERNAME).then( response => this.options = response.data );
   },
@@ -70,7 +72,7 @@ export default {
       }
 
       this.axios.put(
-        process.env.VUE_APP_BASE_URL + "/api/user/update/" + this.user.id, user,
+        process.env.VUE_APP_BASE_URL + "/api/user/update/" + this.user.id + "?apiKey="+this.user.apiKey, user,
         {
           headers: {
             "Access-Control-Allow-Origin" : "*",
@@ -79,7 +81,7 @@ export default {
           }   
         }
       )
-      .then((response) => {        
+      .then(() => {        
         this.$swal({
           icon: 'success',
           title: '',
@@ -96,11 +98,9 @@ export default {
           logged:   true
         }
         localStorage.setItem('user', btoa(JSON.stringify(user)));
-        console.log(JSON.parse(atob(localStorage.getItem('user'))), response)
-        
+        this.user_name = user.username;
         $("#btn-auth").html("Logout");
         $("#profile").html("My Profile");
-        this.$router.go(this.$router.currentRoute)
       },
       (error) => {
         console.log(error);

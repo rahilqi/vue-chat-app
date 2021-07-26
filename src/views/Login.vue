@@ -76,7 +76,9 @@ export default {
             $("#btn-auth").html("Logout");
             $("#profile").html("My Profile");
             $("#friendList").html("Friend Requests");
+            $("#blockList").html("Blocked List");
             this.$router.push({ path: '/home' });
+            $(".menu").show();
           }
         }).catch((error) => {
           if(error.response.status == 401){

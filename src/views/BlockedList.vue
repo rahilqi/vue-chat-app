@@ -8,15 +8,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(friend, i) in friend_reqs" :key="i">
-          <th scope="row" style="padding: 20px 20px;">{{ friend.username }}</th>  
+        <tr v-for="(user, i) in blocked_user" :key="i">
+          <th scope="row" style="padding: 20px 20px;">{{ user.username }}</th>  
           <th scope="row">
             <div class="row">
               <div class="col">
-                <a class="nav-link btn" style="color: #1c859cb0;" href="javascript:void(0)" :id="friend.userid" v-on:click="acceptReq(friend)">Accept</a>
+                <a class="nav-link btn" style="color: #1c859cb0;" href="javascript:void(0)" :id="user['_id']" v-on:click="unblock(user)">Unblock</a>
               </div>
               <div class="col">
-                <button class="btn btn1" :id="chatId(friend.username)" v-on:click="chat(friend)" disabled="true"><img class="chat-img" src="@/assets/chat.png"></button>
+                <button class="btn btn1" :id="chatId(user.username)" v-on:click="chat(user)" disabled="true"><img class="chat-img" src="@/assets/chat.png"></button>
               </div>
             </div>
           </th>  
@@ -39,13 +39,13 @@ export default {
   data() {
     return {
       user:        {},
-      friend_reqs: {}
+      blocked_user: {}
     }
   },
   created(){
     var user  = JSON.parse(atob(localStorage.getItem('user')));
     this.user = user;
-    this.axios.get(process.env.VUE_APP_BASE_URL + "/api/connection/" + this.user.id + "/incomingrequests?apiKey="+this.user.apiKey, 
+    this.axios.get(process.env.VUE_APP_BASE_URL + "/api/connection/blocklist/" + this.user.id + "?apiKey="+this.user.apiKey, 
     {
       headers: {
         'Content-Type': 'application/json',
@@ -53,14 +53,14 @@ export default {
         'Authorization': `Bearer ` + this.user.token
       }
     })
-    .then( response => this.friend_reqs = response.data );
+    .then( response => this.blocked_user = response.data );
   },
 
   methods: {
-    acceptReq(item){
-      this.axios.patch(
-        process.env.VUE_APP_BASE_URL + "/api/connection/accept/" + this.user.id + "?apiKey="+this.user.apiKey, {
-          connectionId: item.userid
+    unblock(item){
+      this.axios.post(
+        process.env.VUE_APP_BASE_URL + "/api/connection/unblock/" + this.user.id + "?apiKey="+this.user.apiKey, {
+          blockeduser: item['_id']
         },
         {
           headers: {
@@ -71,7 +71,7 @@ export default {
         }
       )
       .then(() => {
-        $("#" + item.userid).html("Added");
+        $("#" + item["_id"]).html("");
         $("#"+item.username.match(/\d+/g)[0]).attr("disabled", false)
       },
       (error) => {
@@ -81,7 +81,7 @@ export default {
     chat(item){
       this.$router.push({
         name: 'conversation',
-        params: { id: btoa(item.userid)}
+        params: { id: btoa(item["_id"])}
       });
     },
     chatId(data){

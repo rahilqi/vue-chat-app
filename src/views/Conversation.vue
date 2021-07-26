@@ -28,9 +28,10 @@
   <style type="text/css">
     .chatBox{
       border: 0px solid black;
-      height: 550px;
+      height: 450px;
+      width: 60%;
       margin-bottom: 20px;
-      margin-top: 23px;
+      margin-top: 62px;
       box-shadow: 3px 4px 5px 7px #1c859cb0;
       overflow-y: auto;
     }
@@ -54,7 +55,8 @@
       border-radius: 50%;
     }
     .inputBox{
-      margin-left: 10px;
+      width: 50%;
+      margin-left: 310px;
     }
   </style>
   <script type="text/javascript">
@@ -71,11 +73,9 @@
     created(){
       var user  = JSON.parse(atob(localStorage.getItem('user')));
       this.user = user;
-      // console.log(atob(this.$router.currentRoute["_value"].params.id), this.user, user.apiKey, user.token)
 
       this.axios.post(
-        process.env.VUE_APP_BASE_URL + "/api/conversations/getallconversations/"+this.user.id, {
-          apiKey:   this.user.apiKey,
+        process.env.VUE_APP_BASE_URL + "/api/conversations/getallconversations/"+this.user.id + "?apiKey="+this.user.apiKey, {
           sender:   this.user.id,
           receiver: atob(this.$router.currentRoute["_value"].params.id)
         },
@@ -94,11 +94,11 @@
       (error) => {
         console.log(error);
       });
-
     },
     sockets:{
       SOCKET_output(data){
-        this.messages.push(data[0]);        
+        this.messages.push(data[0]);
+
         $(".chatinput").val("");
         $('#chatBox').animate({ scrollTop: $('#chatBox').prop("scrollHeight")}, 500);
       }

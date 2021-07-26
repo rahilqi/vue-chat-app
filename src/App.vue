@@ -6,12 +6,17 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <div class="dropstart">
+          <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <img class="menu" src="@/assets/menu3.png">
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             <a class="nav-link" href="javascript:void(0)" id="friendList" ref="friendList" v-on:click="friendList()"></a>
+            <a class="nav-link" href="javascript:void(0)" id="blockList" ref="blockList" v-on:click="blockList()"></a>
             <a class="nav-link" href="javascript:void(0)" id="profile" ref="profile" v-on:click="profile()"></a>
             <a class="nav-link" href="javascript:void(0)" id="btn-auth" ref="linkToggle" v-on:click="auth()"></a>
-          </ul>          
+          </ul>
         </div>
       </div>
     </nav>    
@@ -20,6 +25,11 @@
 </template>
 
 <style type="text/css">
+.menu{
+  height: 30px;
+  width: 30px;
+}
+
 form{
   border: 2px solid white;
   padding: 30px;
@@ -31,7 +41,7 @@ form{
   box-shadow: 3px 4px 5px 7px #1c859cb0;
 }
 a.nav-link{
-  color: white;
+  color: black;
 }
 .navbar-brand{
   color: white;
@@ -78,6 +88,8 @@ a:hover{
 </style>
 
 <script>
+import $ from "jquery";
+
 export default {
   mounted() {
     var user = getUser();
@@ -85,7 +97,12 @@ export default {
       // $("#friendList1").html("<p>hello</p>");
       this.$refs.linkToggle.innerText = 'Logout';
       this.$refs.profile.innerText    = 'My Profile';
+      this.$refs.blockList.innerText  = 'Blocked List';
       this.$refs.friendList.innerText = 'Friend Requests';
+      $(".menu").show();
+    }else{
+      $(".menu").hide();
+
     }
   },
   methods: {
@@ -97,6 +114,7 @@ export default {
       this.$refs.profile.innerText    = "";
       this.$refs.friendList.innerText = "";
       localStorage.setItem('user', btoa(JSON.stringify(user)));
+      $(".menu").hide();
       this.$router.push({ path: '/login' });
     },
     home(){
@@ -112,6 +130,9 @@ export default {
     },
     friendList(){
       this.$router.push({ path: '/friendrequests' });
+    },
+    blockList(){
+      this.$router.push({ path: '/blockedlist' });
     }
   }
 }
