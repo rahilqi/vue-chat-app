@@ -150,7 +150,7 @@ export default {
     },
     success(position){
       this.input.lat = position.coords.latitude;
-      this.input.lng = position.coords.latitude;
+      this.input.lng = position.coords.longitude;
     }
   }
 }
